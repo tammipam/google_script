@@ -1,0 +1,17 @@
+function clearRange() {
+      // replace 'Sheet1' with your actual sheet name
+      // replace 'dhrhrejYOURSHETIDerhe5j54j5j' with your actual sheet ID
+
+      var sheetActive = SpreadsheetApp.openById("dhrhrejYOURSHETIDerhe5j54j5j").getSheetByName("Sheet1");
+
+      var start, howManyToDelete;
+
+      start = 2;//Hard coded row number from where to start deleting
+
+      howManyToDelete = sheetActive.getLastRow() - start + 2;//How many rows to delete -
+      //The blank rows after the last row with content will not be deleted
+
+      // sheetActive.deleteRows(start, howManyToDelete);
+      sheetActive.getRange(start, howManyToDelete).clearFormat();
+      sheetActive.autoResizeRows(start, howManyToDelete);
+    }
