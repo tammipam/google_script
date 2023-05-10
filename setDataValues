@@ -1,0 +1,102 @@
+function setDataValues(id, name) {
+
+  // подключение к таблице
+  var sheet = SpreadsheetApp.openById(id);
+
+  // подключение к листу
+  sheetActive = sheet.getSheetByName("namesheet");
+
+  // подключение к листу
+  sheetActive2 = sheet.getSheetByName("namesheet2");
+
+  // очистка листов
+  cleanLIST(sheetActive);
+  cleanLIST(sheetActive2);
+
+  // подключение к исходному листу 
+  var dataSheet = SpreadsheetApp.openById("basicsheet").getSheetByName("namesheet").getDataRange().getValues();
+
+  // фильтрация данных
+  var filteredArray = dataSheet.filter(item => item[12] === name && item[18] === 1);
+  var filteredArray2 = dataSheet.filter(item => item[12] === name && item[18] !== 1);
+
+  // условия для выгрузки и выгрузка
+  if (filteredArray == 0) {
+    if (filteredArray2 == 0) {
+      console.log("error data is null");
+    } else {
+      sheetActive2.getRange(2, 1, countRow(filteredArray2), countColumn(filteredArray2)).setValues(filteredArray2);
+    }
+  } else if (filteredArray2 == 0) {
+    if (filteredArray == 0) {
+      console.log("error data is null");
+    } else {
+      sheetActive.getRange(2, 1, countRow(filteredArray), countColumn(filteredArray)).setValues(filteredArray);
+    }
+  } else {
+    sheetActive.getRange(2, 1, countRow(filteredArray), countColumn(filteredArray)).setValues(filteredArray);
+    sheetActive2.getRange(2, 1, countRow(filteredArray2), countColumn(filteredArray2)).setValues(filteredArray2);
+  }
+  setRowColors2(sheetActive);
+  setRowColors2(sheetActive2);
+  
+
+  // установка даты выгрузки в ячейках S
+  var vartoday = getDate();
+
+  sheetActive2.getRange('S2').clearContent().clearFormat().setValue(vartoday);
+  sheetActive.getRange('S2').clearContent().clearFormat().setValue(vartoday);
+}
+  // функция очистки листа
+function cleanLIST (list) { 
+  list.getRange('2:10000').clearContent().clearFormat();
+  list.getRange('S2:S').clearContent();
+}
+// функции возврата размера строки и столбца
+function countRow(array) {
+return array.length;
+}
+function countColumn(array) {
+return array[0].length;
+}
+// функция постановки цветов
+function setRowColors2(sheet) {
+let data = sheet.getDataRange().getValues();
+   data.forEach(function(row, index) {
+    if (row[16] === 'Красный') {
+    let range = sheet.getRange(index + 1, 1)
+    for (var i = 0; i < data[0].length; i++) {
+      let rowRange = range.offset(0, i, 1);
+      rowRange.setBackground("#ff6055");
+    }
+  } else if (row[16] === 'Желтый') {
+    let range = sheet.getRange(index + 1, 1)
+    for (var i = 0; i < data[0].length; i++) {
+      let rowRange = range.offset(0, i, 1);
+      rowRange.setBackground("yellow");
+    }
+  } else if (row[16] === 'Зеленый') {
+    let range = sheet.getRange(index + 1, 1)
+    for (var i = 0; i < data[0].length; i++) {
+      let rowRange = range.offset(0, i, 1);
+      rowRange.setBackground("#b8f729");
+    }
+  }
+});
+}
+function getDate() {
+var today = new Date();
+today.setDate(today.getDate());
+//return Utilities.formatDate(today, 'PST', 'yyyy.MM.dd');
+return Utilities.formatDate(today, 'GMT+03:00', 'yyyy.MM.dd');
+}
+// // функции фильтрации данных (не используется)
+// function filterResults(item) {
+// return item[12] === 'Исхакова Айсылу Ильсуровна (Казань)' && item[19] !== 1;
+// }
+// function filterResults2(item) {
+// return item[12] === 'Исхакова Айсылу Ильсуровна (Казань)' && item[19] === 1;
+// }
+
+
+
