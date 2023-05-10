@@ -1,0 +1,32 @@
+function setRowColors() {
+
+var sheetActive = SpreadsheetApp.openById("sheetid").getSheetByName("sheetname");
+let data = sheetActive.getDataRange().getValues();
+let columnCount = data[0].length;
+console.log(columnCount);
+
+   data.forEach(function(row, index) {
+    if (row[16] === 'Красный') {
+    let range = sheetActive.getRange(index + 1, 1)
+    for (var i = 0; i < data[0].length; i++) {
+      let rowRange = range.offset(0, i, 1);
+      rowRange.setBackground("#ff6055");
+      console.log(range);
+    }
+  } else if (row[16] === 'Желтый') {
+    let range = sheetActive.getRange(index + 1, 1)
+    for (var i = 0; i < data[0].length; i++) {
+      let rowRange = range.offset(0, i, 1);
+      rowRange.setBackground("yellow");
+      console.log(range);
+    }
+  } else if (row[16] === 'Зеленый') {
+    let range = sheetActive.getRange(index + 1, 1)
+    for (var i = 0; i < data[0].length; i++) {
+      let rowRange = range.offset(0, i, 1);
+      rowRange.setBackground("#b8f729");
+      console.log(range);
+    }
+  }
+});
+}
